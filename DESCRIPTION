@@ -1,0 +1,17 @@
+Package: lowergranite
+Type: Package
+Title: assessing variability of abundances of salmon in different strata
+Version: 0.0.1
+Date: 2014-03-02
+Author: Kirk Steinhorst, Mike Ackerman, Eric C. Anderson
+Maintainer: Eric C. Anderson  <eric.anderson@noaa.gov>
+Description: Implements bootstrapping to assess precision of estimates of
+    abundance, etc.
+License: Public Domain.  See TERMS.md
+LazyData: true
+Roxygen: list(wrap = FALSE)
+Suggests:
+    testthat
+Depends:
+    Hmisc,
+    xlsx

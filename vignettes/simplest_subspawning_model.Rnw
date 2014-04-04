@@ -1,0 +1,103 @@
+%% LyX 2.0.6 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass{article}
+%\usepackage[sc]{mathpazo}
+%\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2.5cm,rmargin=2.5cm}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\usepackage{url}
+\usepackage[unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=true,bookmarksopen=true,bookmarksopenlevel=2,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
+ {hyperref}
+\hypersetup{
+ pdfstartview={XYZ null null 1}}
+\usepackage{breakurl}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+library(knitr)
+# set global chunk options
+opts_chunk$set(fig.path='figure/simplest-', fig.align='center', fig.show='hold')
+options(replace.assign=TRUE,width=90)
+@
+
+
+
+\title{A Very Simple Model of the ``Genetics of Sub-Spawning''}
+
+
+\author{Eric C. Anderson}
+
+\maketitle
+
+\section{Introduction}
+
+Here, I describe and implement some code for a super simple model to investigate the effects of sub-spawning on the dynamics 
+of genetic diversity and effective population size in hatchery programs.
+
+
+\section{Model Formulation}
+Let us start with a simple population of $N_m$ males and $N_f$ females.  We'll assume that it has discrete generations.  Let 
+us imagine that in the current generation a number $n_f$ of the mature females will be taken from the population and a fraction 
+$y$ of their eggs will be used for hatchery production, with the remaining fraction $(1-y)$ available for wild spawning.
+
+
+We will assume that for each female, a number $d$ of distinct males will be taken from the population and used to fertilize 
+the eggs of that female.  Each male is assumed to have an equal chance of fertilizing any of the eggs of the female (i.e. they 
+are expected to contribute equally to each female's fertilization).  Further, we have a parameter $r$ which gives the mating 
+success in the wild of males that were used to spawn in the hatchery.  $r=0$ means that they basically get killed after 
+spawning in the hatchery and $r=1$ means they do just as well spawning in the wild, regardless of whether they got squeezed in 
+a hatchery or not.
+
+Now, we will assume that each offspring born in the hatchery is $s$ times more likely than a wild fish to produce a mature 
+adult offspring.  This means that each pair of hatchery fish will produce offspring (that survive to adulthood) in proportion 
+$\frac{s}{1+s}$, and each pair of wild fish produces offspring in proportion $\frac{1}{1+s}$.
+
+
+So, we can think about a big bucket of offspring from whence the next generation will come.  The fraction of those offspring 
+that are from the hatchery is proportional to $\frac{n_f ys}{1+s}$ and the fraction from the wild is $\frac{N_f-n_f y}{1+s}$. So, 
+we can easily compute the proportion of the next generation that are from the hatchery production versus the wild production:
+\begin{equation}
+H = \biggl(\frac{n_f ys}{1+s}\biggr)\biggl(\frac{n_f y s}{1+s} + \frac{N_f-n_f y}{1+s}\biggr)^{-1}
+\end{equation}
+for the hatchery contribution, and 
+\[
+W = \biggl(\frac{N_f-n_f y}{1+s}\biggr)\biggl(\frac{n_f y s}{1+s} + \frac{N_f-n_f y}{1+s}\biggr)^{-1}
+\]
+for the wild.
+
+Now, if we know those, we can easily compute the probability that two gene copies, sampled randomly from the population in the 
+next generation are both copies of the same gene copy in the current generation.  This probability is what people
+call  ``the probability that two gene copies in the next generation are identical by descent.'' In words, two gene copies 
+will be identical by descent if either:
+\begin{enumerate}
+  \item They are both descended from the hatchery parents (probability $H^2$) {\em and} they are both copies of the same gene 
+  amongst the hatchery parents, or
+  \item They are both descended from the wild parents (probability $W^2$) {\em and} 
+  they are both copies of the same gene amongst 
+  the wild parents.
+\end{enumerate}
+So, all that remains is computing these probabilities.  
+
+Notice that if two gene copies are both from the hatchery production, 
+then the probability that they are identical by descent depends on how many females and males were spawned at the hatchery.
+Namely, the probability that two randomly sampled genes are IBD given they are both from the hatchery production is:
+\[
+\biggl(\frac{1}{4} \times \frac{1}{n_f} \times \frac{1}{2}\biggr) + \biggl(\frac{1}{4} \frac{1}{d n_f} \frac{1}{2}\biggr).
+\]
+The first part in parentheses is obtained by the following reasoning: 
+\begin{quote}
+With probability $\frac{1}{4}$ both gene copies are from female parents, if that is the case, then, with probability 1 the first gene copy comes from one of the females, and then the probability that the next gene copy comes from that same female is $\frac{1}{n_f}$.  If both gene copies come from the same female, then with probability $\frac{1}{2}$ they are descended from the same gene copy in that female (since she is diploid).  
+\end{quote}
+Likewise, the second part in parentheses is obtained because:
+\begin{quote}
+With probability $\frac{1}{4}$ both gene copies are from male parents, if that is the case, then, with probability 1 the first gene copy comes from one of the males that was spawned with the hatchery females, and then the probability that the next gene copy comes from that same male is $\frac{1}{d n_f}$ (because we assumed that each female is mated with $d$ males
+and each of those males contributes equally).  If both gene copies come from the same male, then with probability $\frac{1}{2}$ they are descended from the same gene copy in that male (since he is diploid).  
+\end{quote}
+
+
+
+\end{document}

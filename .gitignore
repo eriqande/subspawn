@@ -1,0 +1,17 @@
+*.pdf
+*.aux
+*.log
+*.out
+*.tex
+*.synctex.gz
+.DS_Store
+.Rproj.user
+.Rhistory
+*.Rbuildignore
+*.DS_Store
+*~
+src/*.so
+src/*.o
+.RData
+README.html
+TERMS.html

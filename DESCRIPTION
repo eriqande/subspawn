@@ -6,8 +6,8 @@ Date: 2014-03-02
 Author: Eric C. Anderson
 Maintainer: Eric C. Anderson  <eric.anderson@noaa.gov>
 Description: Implements simple calculations to assess the affect of
-  hatchery subspawning on genetic diversity / effective size of 
-  salmon and steelhead populations.
+    hatchery subspawning on genetic diversity / effective size of
+    salmon and steelhead populations.
 License: Public Domain.  See TERMS.md
 LazyData: true
 Roxygen: list(wrap = FALSE)
@@ -15,4 +15,4 @@ Suggests:
     testthat
 VignetteBuilder: knitr
 Depends:
-
+    

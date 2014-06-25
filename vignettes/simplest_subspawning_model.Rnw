@@ -53,19 +53,15 @@ spawning in the hatchery and $r=1$ means they do just as well spawning in the wi
 a hatchery or not.
 
 Now, we will assume that each offspring born in the hatchery is $s$ times more likely than a wild fish to produce a mature 
-adult offspring.  This means that each pair of hatchery fish will produce offspring (that survive to adulthood) in proportion 
-$\frac{s}{1+s}$, and each pair of wild fish produces offspring in proportion $\frac{1}{1+s}$.
-
-
-So, we can think about a big bucket of offspring from whence the next generation will come.  The fraction of those offspring 
-that are from the hatchery is proportional to $\frac{n_f ys}{1+s}$ and the fraction from the wild is $\frac{N_f-n_f y}{1+s}$. So, 
+adult offspring. So, we can think about a big bucket of offspring from whence the next generation will come.  The number of those offspring 
+that are from the hatchery is proportional to $n_f ys$ and the number  from the wild is proportional to  $N_f-n_f y$. So, 
 we can easily compute the proportion of the next generation that are from the hatchery production versus the wild production:
 \begin{equation}
-H = \biggl(\frac{n_f ys}{1+s}\biggr)\biggl(\frac{n_f y s}{1+s} + \frac{N_f-n_f y}{1+s}\biggr)^{-1}
+H = \frac{n_f ys}{n_f y s + N_f-n_f y}
 \end{equation}
 for the hatchery contribution, and 
 \[
-W = \biggl(\frac{N_f-n_f y}{1+s}\biggr)\biggl(\frac{n_f y s}{1+s} + \frac{N_f-n_f y}{1+s}\biggr)^{-1}
+W = \frac{N_f-n_f y}{n_f y s + N_f-n_f y}
 \]
 for the wild.
 
@@ -95,9 +91,58 @@ With probability $\frac{1}{4}$ both gene copies are from female parents, if that
 Likewise, the second part in parentheses is obtained because:
 \begin{quote}
 With probability $\frac{1}{4}$ both gene copies are from male parents, if that is the case, then, with probability 1 the first gene copy comes from one of the males that was spawned with the hatchery females, and then the probability that the next gene copy comes from that same male is $\frac{1}{d n_f}$ (because we assumed that each female is mated with $d$ males
-and each of those males contributes equally).  If both gene copies come from the same male, then with probability $\frac{1}{2}$ they are descended from the same gene copy in that male (since he is diploid).  
+and each of those males contributes equally).  If both gene copies come from the same male, then with probability $\frac{1}{2}$ they are descended from the same gene copy in that male (since he is diploid).   Note that this formulation assumes that none of the $d$ males mated to one female will be used to fertilize a different female. NB. you probably could also parameterize this by the total number of males spawned with females, but that would assume that each male was spawned with the same number of females).
 \end{quote}
 
+And by a similar reasoning, the probability that two gene copies descended from the wild population are identical by descent has a part concerning females:
+\[
+\frac{1}{4}\biggl\{\biggl[\biggl(\frac{N_f}{N_f + n_f(1-y)}\biggr)^2 \cdot \frac{1}{N_f} \cdot \frac{1}{2}\biggr)\biggr] +
+\biggl[\biggl(\frac{n_f(1-y)}{N_f + n_f(1-y)}\biggr)^2 \cdot \frac{1}{n_f} \cdot \frac{1}{2}\biggr)\biggr]\biggr\}
+\]
+and a part concerning males:
+\[
+\frac{1}{4}\biggl\{\biggl[\biggl(\frac{N_m}{N_m + dn_fr}\biggr)^2 \cdot \frac{1}{N_m} \cdot \frac{1}{2}\biggr)\biggr] +
+\biggl[\biggl(\frac{dn_fr}{N_m + dn_fr}\biggr)^2 \cdot \frac{1}{dn_f} \cdot \frac{1}{2}\biggr)\biggr] \biggl\}
+\]
+
+So\ldots the probability that two randomly sampled gene copies are IBD is:
+\begin{eqnarray}
+P(IBD) & = & H^2 \times \biggl(\frac{1}{4} \times \frac{1}{n_f} \times \frac{1}{2}\biggr) + \biggl(\frac{1}{4} \frac{1}{d n_f} \frac{1}{2}\biggr) \\
+& + & \frac{W^2}{4}\biggl\{ \biggl[\biggl(\frac{N_f}{N_f + n_f(1-y)}\biggr)^2 \cdot \frac{1}{N_f} \cdot \frac{1}{2}\biggr)\biggr] +
+\biggl[\biggl(\frac{n_f(1-y)}{N_f + n_f(1-y)}\biggr)^2 \cdot \frac{1}{n_f} \cdot \frac{1}{2}\biggr)\biggr] \\
+& + & \biggl[\biggl(\frac{N_m}{N_m + dn_fr}\biggr)^2 \cdot \frac{1}{N_m} \cdot \frac{1}{2}\biggr)\biggr] +
+\biggl[\biggl(\frac{dn_fr}{N_m + dn_fr}\biggr)^2 \cdot \frac{1}{dn_f} \cdot \frac{1}{2}\biggr)\biggr] 
+\biggr\}
+\end{eqnarray}
 
 
+\begin{eqnarray}
+P(IBD) & = & \frac{H^2(1+d)}{8dn_f} + \frac{W^2}{8}\biggl[ 
+\frac{1}{N_f}\biggl(\frac{N_f}{N_f + n_f(1-y)}\biggr)^2 + 
+\frac{1}{n_f}\biggl(\frac{n_f(1-y)}{N_f + n_f(1-y)}\biggr)^2 + \\
+& \mbox{} & 
+\frac{1}{N_m}\biggl(\frac{N_m}{N_m + dn_fr}\biggr)^2 + 
+\frac{1}{dn_f}\biggl(\frac{dn_fr}{N_m + dn_fr}\biggr)^2
+\biggr]
+\end{eqnarray}
+
+
+Hooray! Now all we need to do is write an R function.  Let's do that as part of the package\ldots.
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
